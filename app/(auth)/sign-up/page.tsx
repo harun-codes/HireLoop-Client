@@ -3,16 +3,47 @@
 import * as React from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { CircleAlertIcon, Loader2Icon } from "lucide-react"
+import {
+  CircleAlertIcon,
+  Loader2Icon,
+  ShieldCheckIcon,
+  UserRoundIcon,
+  BriefcaseIcon,
+} from "lucide-react"
 
+import { cn } from "@/lib/utils"
 import { AuthField, PasswordField } from "@/components/auth/form-controls"
 import { authClient } from "@/lib/auth-client"
+
+const roles = [
+  {
+    value: "seeker",
+    label: "Job Seeker",
+    icon: UserRoundIcon,
+    hint: "Find and apply for jobs",
+  },
+  {
+    value: "recruiter",
+    label: "Recruiter",
+    icon: BriefcaseIcon,
+    hint: "Hire top talent",
+  },
+  {
+    value: "admin",
+    label: "Admin",
+    icon: ShieldCheckIcon,
+    hint: "Manage the platform",
+  },
+] as const
 
 const SignUpPage = () => {
     const router = useRouter()
     const [name, setName] = React.useState("")
     const [email, setEmail] = React.useState("")
     const [password, setPassword] = React.useState("")
+    const [role, setRole] = React.useState<(typeof roles)[number]["value"]>(
+        "seeker"
+    )
     const [errors, setErrors] = React.useState<{
         name?: string | null
         email?: string | null
@@ -70,6 +101,8 @@ const SignUpPage = () => {
                 name,
                 email,
                 password,
+                // Role stored on the user via better-auth additionalFields
+                role,
                 callbackURL: "/sign-in",
             })
 
@@ -128,6 +161,54 @@ const SignUpPage = () => {
                 className="mt-6 flex flex-col gap-4"
                 noValidate
             >
+                <fieldset className="flex flex-col gap-1.5">
+                    <legend className="text-sm text-violet-100/60">
+                        I am a
+                    </legend>
+                    <div className="grid grid-cols-3 gap-2">
+                        {roles.map((option) => (
+                            <label
+                                key={option.value}
+                                className="group relative cursor-pointer"
+                            >
+                                <input
+                                    type="radio"
+                                    name="role"
+                                    value={option.value}
+                                    checked={role === option.value}
+                                    onChange={() => setRole(option.value)}
+                                    className="peer sr-only"
+                                    aria-description={option.hint}
+                                />
+                                <span
+                                    className={cn(
+                                        "flex h-full flex-col items-center gap-1.5 rounded-lg border px-2 py-3 transition-colors peer-focus-visible:ring-3 peer-focus-visible:ring-violet-500/40",
+                                        role === option.value
+                                            ? "border-violet-400/60 bg-violet-500/15 text-white"
+                                            : "border-white/10 bg-white/[0.03] text-violet-100/60 hover:border-white/20 hover:bg-white/[0.06]"
+                                    )}
+                                >
+                                    <option.icon
+                                        className={cn(
+                                            "size-5",
+                                            role === option.value
+                                                ? "text-violet-300"
+                                                : "text-violet-100/40 group-hover:text-violet-100/70"
+                                        )}
+                                        strokeWidth={1.75}
+                                    />
+                                    <span className="text-xs font-medium">
+                                        {option.label}
+                                    </span>
+                                    <span className="text-center text-[10px] leading-tight text-violet-100/35">
+                                        {option.hint}
+                                    </span>
+                                </span>
+                            </label>
+                        ))}
+                    </div>
+                </fieldset>
+
                 <AuthField
                     name="name"
                     label="Full name"
