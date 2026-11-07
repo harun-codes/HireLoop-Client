@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -20,6 +21,7 @@ function SearchField({
   return (
     <label className="flex items-center gap-2.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/[0.04]">
       <Icon className="size-5 shrink-0 text-white/40" />
+
       <input
         type="text"
         aria-label={label}
@@ -34,14 +36,18 @@ function SearchField({
 
 export function HeroSearch({ className }: { className?: string }) {
   const router = useRouter()
+
   const [query, setQuery] = React.useState("")
   const [location, setLocation] = React.useState("")
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
     const params = new URLSearchParams()
+
     if (query.trim()) params.set("q", query.trim())
     if (location.trim()) params.set("location", location.trim())
+
     router.push(`/jobs${params.size ? `?${params.toString()}` : ""}`)
   }
 
@@ -49,26 +55,27 @@ export function HeroSearch({ className }: { className?: string }) {
     <form
       onSubmit={handleSubmit}
       className={cn(
-        "flex flex-col items-stretch gap-1.5 rounded-[10px] border border-white/10 bg-white/[0.06] p-2 pl-4 shadow-lg backdrop-blur-md sm:flex-row sm:items-center sm:gap-0",
+        "flex flex-col items-stretch gap-1.5 rounded-[10px] border border-white/10 bg-white/[0.06] p-2 pl-4 shadow-lg backdrop-blur-md sm:flex-row sm:items-center sm:gap-2",
         className
       )}
     >
+      {/* Job Search Field */}
       <SearchField
         icon={SearchIcon}
         label="Job title, skill or company"
         value={query}
         onChange={setQuery}
       />
-      <div
-        aria-hidden
-        className="bg-white/25 mx-1 hidden h-10 w-px self-center sm:block [mask-image:repeating-linear-gradient(to_bottom,black_0,black_3px,transparent_3px,transparent_8px)]"
-      />
+
+      {/* Location Search Field - no vertical separator */}
       <SearchField
         icon={MapPinIcon}
         label="Location or Remote"
         value={location}
         onChange={setLocation}
       />
+
+      {/* Search Button */}
       <button
         type="submit"
         aria-label="Search jobs"

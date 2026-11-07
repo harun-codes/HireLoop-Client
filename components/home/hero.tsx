@@ -1,3 +1,4 @@
+
 import Link from "next/link"
 import Image from "next/image"
 import {
@@ -7,7 +8,6 @@ import {
   StarIcon,
 } from "lucide-react"
 
-import { Separator } from "@/components/ui/separator"
 import { HeroSearch } from "@/components/home/hero-search"
 import globeImg from "@/images/globe-hero.png"
 
@@ -39,7 +39,6 @@ const stats = [
   },
 ]
 
-// Deterministic star positions (percentages of the globe backdrop)
 const stars = [
   { top: 10, left: 4, size: 4, delay: 0 },
   { top: 2, left: 11, size: 3, delay: 0.6 },
@@ -56,18 +55,27 @@ const stars = [
   { top: 11, left: 93, size: 3, delay: 1.6 },
 ]
 
-function StatCard({ icon: Icon, value, label, href }: (typeof stats)[number]) {
+function StatCard({
+  icon: Icon,
+  value,
+  label,
+  href,
+}: (typeof stats)[number]) {
   return (
     <Link
       href={href}
-      className="group from-[#2c202e]/90 to-[#231827]/85 hover:border-white/20 relative flex h-60 flex-col justify-between rounded-xl border border-white/[0.08] bg-gradient-to-b p-6 text-left outline-none backdrop-blur-md transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-56 lg:h-[16.5vw]"
+      className="group relative flex h-60 flex-col justify-between rounded-xl border border-white/[0.08] bg-gradient-to-b from-[#2c202e]/90 to-[#231827]/85 p-6 text-left outline-none backdrop-blur-md transition-all hover:border-white/20 hover:bg-white/[0.08] focus-visible:ring-3 focus-visible:ring-ring/50 sm:h-56 lg:h-[16.5vw]"
     >
-      <Icon className="text-white/70 size-7 shrink-0" strokeWidth={1.75} />
+      <Icon className="size-7 shrink-0 text-white/70" strokeWidth={1.75} />
+
       <div>
         <div className="text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
           {value}
         </div>
-        <div className="mt-2 text-sm text-white/55 lg:text-lg">{label}</div>
+
+        <div className="mt-2 text-sm text-white/55 lg:text-lg">
+          {label}
+        </div>
       </div>
     </Link>
   )
@@ -75,38 +83,55 @@ function StatCard({ icon: Icon, value, label, href }: (typeof stats)[number]) {
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#1b1320] pb-10 lg:pb-0">
+    <section className="relative isolate overflow-hidden bg-[#100b16] pb-10 lg:pb-0">
+
+      {/* Smooth ambient background - no vertical stripes */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_50%_75%,rgba(124,85,252,0.18),transparent_48%)]"
+      />
+
+      {/* Hero Content */}
       <div className="relative z-20 mx-auto flex max-w-6xl flex-col items-center px-4 pt-20 text-center sm:pt-24">
-        {/* Announcement badge */}
+
+        {/* Announcement Badge */}
         <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.05] px-5 py-2.5 backdrop-blur">
           <BriefcaseIcon className="size-5 text-orange-500" />
-          <span className="text-2xl font-bold text-white">50,000+</span>
-          <Separator orientation="vertical" className="h-6 bg-white/15" />
+
+          <span className="text-2xl font-bold text-white">
+            50,000+
+          </span>
+
           <span className="font-mono text-sm tracking-[0.18em] text-violet-100/60 uppercase">
             New jobs this month
           </span>
         </div>
 
+        {/* Heading */}
         <h1 className="mt-10 max-w-4xl text-4xl font-semibold tracking-tight text-balance text-white sm:text-6xl">
           Find Your Dream Job Today
         </h1>
 
+        {/* Description */}
         <p className="mt-6 max-w-2xl text-xl leading-relaxed text-balance text-violet-100/55">
           HireLoop connects top talent with world-class companies. Browse
           thousands of curated opportunities and land your next role — faster.
         </p>
 
+        {/* Search */}
         <HeroSearch className="mt-14 w-full max-w-3xl" />
 
+        {/* Trending Positions */}
         <div className="mt-7 flex flex-wrap items-center justify-center gap-x-3 gap-y-2">
           <span className="text-base text-violet-100/55">
             Trending Position
           </span>
+
           {trendingPositions.map((position) => (
             <Link
               key={position.href}
               href={position.href}
-              className="rounded-lg border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-white/90 transition-colors outline-none hover:bg-white/[0.1] focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="rounded-lg border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-white/90 outline-none transition-colors hover:bg-white/[0.1] focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               {position.label}
             </Link>
@@ -114,19 +139,21 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Globe backdrop */}
+      {/* Globe Backdrop */}
       <div className="relative mt-4 h-auto overflow-hidden lg:h-[82vw]">
-        {/* Violet atmosphere glow above the arc */}
+
+        {/* Violet Atmosphere Glow */}
         <div
           aria-hidden
-          className="absolute left-1/2 h-[45%] w-[110vw] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(129,96,252,0.4),rgba(129,96,252,0.12),transparent)] blur-2xl top-[30%] lg:h-[30vw] lg:top-[-10vw] lg:w-[75vw]"
-        />
-        <div
-          aria-hidden
-          className="absolute left-1/2 h-[16vw] w-[44vw] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(139,102,255,0.45),transparent)] blur-xl top-[2vw] hidden lg:block"
+          className="absolute left-1/2 top-[30%] h-[45%] w-[110vw] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(129,96,252,0.4),rgba(129,96,252,0.12),transparent)] blur-2xl lg:top-[-10vw] lg:h-[30vw] lg:w-[75vw]"
         />
 
-        {/* Twinkling stars */}
+        <div
+          aria-hidden
+          className="absolute left-1/2 top-[2vw] hidden h-[16vw] w-[44vw] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(139,102,255,0.45),transparent)] blur-xl lg:block"
+        />
+
+        {/* Twinkling Stars */}
         <div aria-hidden className="absolute inset-0">
           {stars.map((star, index) => (
             <span
@@ -143,6 +170,7 @@ export function Hero() {
           ))}
         </div>
 
+        {/* Globe Image */}
         <Image
           src={globeImg}
           alt=""
@@ -151,15 +179,15 @@ export function Hero() {
           width={1440}
           height={1342}
           sizes="(min-width: 1024px) 105vw, 170vw"
-          className="absolute left-1/2 max-w-none -translate-x-1/2 [mask-image:linear-gradient(to_bottom,transparent,black_17%)] top-[45vw] w-[150vw] h-auto sm:top-[38vw] sm:w-[140vw] lg:top-[-15.5vw] lg:w-[105vw]"
+          className="absolute left-1/2 top-[45vw] h-auto max-w-none -translate-x-1/2 [mask-image:linear-gradient(to_bottom,transparent,black_17%)] w-[150vw] sm:top-[38vw] sm:w-[140vw] lg:top-[-15.5vw] lg:w-[105vw]"
         />
 
-        {/* Caption over the planet face */}
-        <p className="absolute top-[55%] left-1/2 z-20 w-full max-w-[40rem] -translate-x-1/2 px-4 text-2xl font-medium text-balance text-white/90 sm:text-3xl lg:top-[24vw] lg:text-4xl lg:leading-snug">
+        {/* Globe Caption */}
+        <p className="absolute left-1/2 top-[55%] z-20 w-full max-w-[40rem] -translate-x-1/2 px-4 text-2xl font-medium text-balance text-white/90 sm:text-3xl lg:top-[24vw] lg:text-4xl lg:leading-snug">
           Assisting over 15,000 job seekers find their dream positions.
         </p>
 
-        {/* Stats */}
+        {/* Statistics */}
         <div className="relative z-20 mx-auto w-full px-4 pt-[26rem] sm:pt-[28rem] lg:absolute lg:inset-x-0 lg:top-[34vw] lg:z-20 lg:px-6 lg:pt-0">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-7">
             {stats.map((stat) => (
@@ -168,12 +196,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-
-      {/* Vertical panel stripes overlay (above globe, below content) */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-10 bg-[repeating-linear-gradient(90deg,rgba(8,2,12,0.5)_0,rgba(8,2,12,0.5)_6.1vw,transparent_6.1vw,transparent_12.6vw)]"
-      />
     </section>
   )
 }

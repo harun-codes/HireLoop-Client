@@ -17,6 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { useSession, signOut } from "@/lib/auth-client"
 
 const navLinks = [
   { label: "Browse Jobs", href: "/jobs" },
@@ -39,6 +40,15 @@ function Logo({ className }: { className?: string }) {
 
 export function SiteNavbar() {
   const [open, setOpen] = React.useState(false)
+  const { data: session } = useSession();
+
+  console.log("Session in SiteNavbar:", session);
+
+  const handleSignOut = async () => {
+    await signOut();
+
+  }
+
 
   return (
     <header className="bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur">
@@ -68,16 +78,40 @@ export function SiteNavbar() {
           <Separator orientation="vertical" className="hidden h-5 md:block" />
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/sign-in"
-              className="rounded-md px-2.5 py-1.5 text-sm font-medium text-primary transition-colors hover:underline underline-offset-4 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-            >
-              Sign In
-            </Link>
-            <Button render={<Link href="/get-started" />} nativeButton={false}>
-              Get Started
-            </Button>
+
+            {
+              session?.user ?
+                <>
+                  <span>Welcome, {session.user.name}</span>
+                  <Button
+                    onClick={handleSignOut}
+                    render={<Link href="/sign-up" />}
+                    nativeButton={false}
+                    className="rounded-lg border border-red-200 bg-red-50 px-4 py-2 font-medium text-red-600 shadow-sm transition-all duration-200 hover:border-red-600 hover:bg-red-600 hover:text-white dark:border-red-900/50 dark:bg-red-950/30 dark:text-red-400 dark:hover:bg-red-600 dark:hover:text-white"
+                  >
+                    Sign Out
+                  </Button>
+                </>
+
+
+                :
+                <>
+                  <Link
+                    href="/sign-in"
+                    className="rounded-md px-2.5 py-1.5 text-sm font-medium text-primary transition-colors hover:underline underline-offset-4 outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    Sign In
+                  </Link>
+
+                  <Button render={<Link href="/sign-up" />} nativeButton={false}>
+                    Get Started
+                  </Button>
+
+                </>
+            }
           </div>
+
+
         </div>
 
         {/* Mobile nav */}
