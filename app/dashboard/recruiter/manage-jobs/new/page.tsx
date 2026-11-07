@@ -35,10 +35,11 @@ import {
     RadioGroup,
     RadioGroupItem,
 } from "@/components/ui/radio-group"
+import { CreateJob } from "@/lib/actions/jobs"
 
 type JobType = "Full-time" | "Part-time" | "Contract" | "Internship"
 
-type JobFormValues = {
+export type JobFormValues = {
     jobTitle: string
     companyName: string
     category: string
@@ -180,7 +181,7 @@ function FormSection({
 }
 
 export default function NewJobPage() {
-    
+
     const [formData, setFormData] =
         React.useState<JobFormValues>(initialFormValues)
 
@@ -200,52 +201,15 @@ export default function NewJobPage() {
         setFormMessage("")
     }
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-
-        setFormError("")
-        setFormMessage("")
-
-        const minSalary =
-            formData.minSalary.trim() === ""
-                ? null
-                : Number(formData.minSalary)
-
-        const maxSalary =
-            formData.maxSalary.trim() === ""
-                ? null
-                : Number(formData.maxSalary)
-
-        if (
-            minSalary !== null &&
-            maxSalary !== null &&
-            minSalary > maxSalary
-        ) {
-            setFormError(
-                "Minimum salary cannot be greater than maximum salary."
-            )
-            return
-        }
-
-        const jobData = {
-            jobTitle: formData.jobTitle.trim(),
-            companyName: formData.companyName.trim(),
-            category: formData.category,
-            jobType: formData.jobType,
-            isRemote: formData.isRemote,
-            location: formData.location.trim(),
-            deadline: formData.deadline || null,
-            minSalary,
-            maxSalary,
-            frequency: formData.frequency,
-            responsibilities: formData.responsibilities.trim(),
-            qualifications: formData.qualifications.trim(),
-        }
-
+        const jobData: JobFormValues = {...formData}
         console.log("Collected Job Data:", jobData)
 
+        const result = await CreateJob(jobData)
+        console.log(result);
         setFormMessage(
-            "Your job information has been collected successfully. Check the browser console for the submitted data."
+            "Your job information has been collected successfully."
         )
     }
 
